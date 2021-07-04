@@ -5,12 +5,59 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>タイトル</title>
-  <link rel="stylesheet" href="css/reset.css" />
+  <!-- <link rel="stylesheet" href="css/reset.css" /> -->
   <link rel="stylesheet" href="css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 </head>
-
 <body>
-  <!-- 以下の内容を追加します -->
+	<h1>TODOアプリ</h1>
+  <div id="app">
+      タスク名：<input v-model="name">
+      推定時間（分）：<input v-model="time">
+      <button v-on:click="addTask">追加</button>
+      <!-- リストで表示します。 -->
+      <table>
+				<tr>
+					<th>タスク</th><th>推定時間（分）</th>
+				</tr>
+				<tr v-for="task in tasks" v-bind:key="task.id">
+					<td>{{ task.name }}</td><td>{{ task.time }}分</td>
+				</tr>
+			</table>
+  </div>
+  <script>
+  Vue.config.productionTip = false
+  var app = new Vue({
+    el: '#app',
+    data: {
+			name: '',
+			time: '60',
+      // リストで初期表示するデータを設定
+      tasks: [
+        { id: 1, name: '予習', time: 30 },
+        { id: 2, name: '学習', time: 40 },
+        { id: 3, name: '復習', time: 50 }
+      ]
+    },
+    methods: {
+      addTask: function() {
+        var max = this.tasks.reduce(function(accumulator, currentValue) {
+          return accumulator > currentValue.id ? accumulator : currentValue.id
+        }, 0)
+
+        // 新しい項目のIDを算出
+        var id = max + 1
+
+        // 新しい項目を追加
+        this.tasks.push({
+					id: id,
+          name: this.name,
+          time: this.time
+        })
+      }
+    }
+  })
+  </script>
 </body>
 
 </html>
